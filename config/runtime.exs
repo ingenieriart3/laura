@@ -56,6 +56,7 @@ if config_env() == :prod do
   config :laura, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :laura, LauraWeb.Endpoint,
+    asset_host: System.get_env("ASSET_HOST") || System.get_env("PHX_HOST"),
     server: true,
     url: [host: host, port: 443, scheme: "https"],
     http: [
