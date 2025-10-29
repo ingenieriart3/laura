@@ -67,7 +67,7 @@ config :tailwind,
   version: "4.1.7",
   laura: [
     args: ~w(
-      --input=assets/css/app.css
+      --input=assets/app.css
       --output=priv/static/assets/app.css
     ),
     # cd: Path.expand("..", __DIR__)
