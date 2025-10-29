@@ -60,7 +60,7 @@ COPY priv priv
 RUN mix compile
 
 RUN mix release
-RUN phx.digest
+# RUN phx.digest
 
 # --- Runtime stage ---
 FROM alpine:3.21.0 AS runtime
