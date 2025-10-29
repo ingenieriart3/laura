@@ -90,6 +90,15 @@ defmodule Laura.MixProject do
         "esbuild laura --minify",
         "phx.digest"
       ],
+      # "assets.deploy": [
+      #   "tailwind laura --minify",
+      #   "esbuild laura --minify",
+      #   "cmd --cd assets mv priv/static/assets/css/* priv/static/assets/",
+      #   "cmd --cd assets mv priv/static/assets/js/* priv/static/assets/",
+      #   "cmd --cd assets rmdir priv/static/assets/css",
+      #   "cmd --cd assets rmdir priv/static/assets/js",
+      #   "phx.digest"
+      # ],
       precommit: ["compile --warning-as-errors", "deps.unlock --unused", "format", "test"]
     ]
   end

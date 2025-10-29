@@ -1,0 +1,66 @@
+<!-- lib/laura_web/controllers/registration_html/new.html.heex -->
+<div class="hero min-h-screen bg-base-200">
+  <div class="hero-content flex-col">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold">Comenzar es muy fácil</h1>
+      <p class="py-6">Prueba Laura gratis por 30 días. Sin compromisos.</p>
+    </div>
+    
+    <div class="card w-full max-w-md shadow-2xl bg-base-100">
+      <form class="card-body" action="/register" method="post">
+        <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
+        
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Email profesional</span>
+          </label>
+          <input 
+            type="email" 
+            name="registration[email]"
+            placeholder="tu@clinica.com" 
+            class="input input-bordered" 
+            required 
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Nombre de tu consultorio</span>
+          </label>
+          <input 
+            type="text" 
+            name="registration[clinic_name]"
+            placeholder="Consultorio Dr. García" 
+            class="input input-bordered" 
+            required 
+          />
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">Plan elegido</span>
+          </label>
+          <select name="registration[plan]" class="select select-bordered w-full">
+            <%= for plan <- @plans do %>
+              <option 
+                value={plan.code} 
+                selected={plan.code == @default_plan}
+              >
+                <%= plan.name %> - $<%= div(plan.price_monthly, 100) %>/mes
+              </option>
+            <% end %>
+          </select>
+        </div>
+
+        <div class="form-control mt-6">
+          <button class="btn btn-primary btn-lg">Comenzar Prueba Gratis</button>
+        </div>
+
+        <div class="text-center text-sm text-base-content/70 mt-4">
+          Al registrarte aceptas nuestros 
+          <a href="/terms" class="link link-primary">Términos de Servicio</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

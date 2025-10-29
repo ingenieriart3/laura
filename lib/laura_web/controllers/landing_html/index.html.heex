@@ -1,0 +1,73 @@
+<!-- lib/laura_web/controllers/landing_html/index.html.heex -->
+<div>
+  <!-- Hero Section -->
+  <section class="hero min-h-screen bg-gradient-to-br from-primary to-secondary text-primary-content">
+    <div class="hero-content text-center">
+      <div class="max-w-2xl">
+        <h1 class="text-5xl md:text-6xl font-bold mb-6">
+          Gestión médica 
+          <span class="text-accent">sin complicaciones</span>
+        </h1>
+        <p class="text-xl mb-8 opacity-90">
+          Laura automatiza tu consultorio para que te enfoques en lo que más importa: tus pacientes.
+          Agenda, historias clínicas y facturación en una sola plataforma.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/register" class="btn btn-accent btn-lg">
+            Comenzar 30 Días Gratis
+          </a>
+          <a href="/features" class="btn btn-outline btn-lg btn-primary">
+            Ver Características
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Preview -->
+  <section id="features" class="py-20 bg-base-100">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold mb-4">Todo lo que necesitas en un solo lugar</h2>
+        <p class="text-xl text-base-content/70 max-w-2xl mx-auto">
+          Diseñado específicamente para el flujo de trabajo médico
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="card bg-base-200 shadow-xl">
+          <div class="card-body">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <span class="text-primary font-bold text-lg">📅</span>
+            </div>
+            <h3 class="card-title">Agenda Inteligente</h3>
+            <p>Gestiona turnos, recordatorios automáticos y disponibilidad de profesionales en tiempo real.</p>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="card bg-base-200 shadow-xl">
+          <div class="card-body">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <span class="text-primary font-bold text-lg">📋</span>
+            </div>
+            <h3 class="card-title">Historia Clínica Digital</h3>
+            <p>Acceso seguro a historiales médicos completos desde cualquier dispositivo.</p>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="card bg-base-200 shadow-xl">
+          <div class="card-body">
+            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4">
+              <span class="text-primary font-bold text-lg">💰</span>
+            </div>
+            <h3 class="card-title">Facturación Integrada</h3>
+            <p>Genera facturas automáticamente y gestiona pagos de forma sencilla.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
