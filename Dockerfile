@@ -60,6 +60,8 @@ COPY priv priv
 RUN mix compile
 
 RUN mix release
+RUN MIX_ENV=prod mix assets.deploy
+RUN MIX_ENV=prod mix release
 
 # --- Runtime stage ---
 FROM alpine:3.21.0 AS runtime
