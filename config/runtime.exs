@@ -56,6 +56,7 @@ if config_env() == :prod do
   config :laura, :dns_cluster_query, System.get_env("DNS_CLUSTER_QUERY")
 
   config :laura, LauraWeb.Endpoint,
+    server: true,
     url: [host: host, port: 443, scheme: "https"],
     http: [
       # Enable IPv6 and bind on all interfaces.
