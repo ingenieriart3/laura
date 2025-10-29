@@ -73,6 +73,9 @@ defmodule LauraWeb.Router do
     get "/register", RegistrationController, :new
     post "/register", RegistrationController, :create
     get "/welcome", RegistrationController, :welcome
+
+    # lib/laura_web/router.ex
+    get "/debug/styles", DebugController, :test_styles
   end
 
   # Otras rutas (para más adelante)
