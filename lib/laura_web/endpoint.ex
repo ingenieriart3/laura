@@ -23,7 +23,8 @@ defmodule LauraWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :laura,
-    gzip: not code_reloading?,
+    # gzip: not code_reloading?,
+    gzip: false,
     only: LauraWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
