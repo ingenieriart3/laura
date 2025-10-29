@@ -1,4 +1,5 @@
-FROM hexpm/elixir:1.15.7-erlang-26.2.2-alpine-3.18.4
+# # Dockerfile CORREGIDO
+FROM hexpm/elixir:1.16.1-erlang-26.2.2-alpine-3.19.1
 
 RUN apk add --no-cache build-base git npm postgresql-client
 
@@ -24,7 +25,7 @@ RUN mix compile
 
 RUN MIX_ENV=prod mix release
 
-FROM alpine:3.18.4
+FROM alpine:3.19.1
 
 RUN apk add --no-cache openssl ncurses libstdc++ postgresql-client
 
