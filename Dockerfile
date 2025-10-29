@@ -52,15 +52,15 @@ RUN mix deps.compile
 COPY config config
 COPY assets assets
 
-RUN cd assets && npm install
+# RUN cd assets && npm install
 RUN mix assets.deploy
+RUN mix phx.digest
 
 COPY lib lib
 COPY priv priv
 RUN mix compile
 
 RUN mix release
-# RUN phx.digest
 
 # --- Runtime stage ---
 FROM alpine:3.21.0 AS runtime
