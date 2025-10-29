@@ -24,9 +24,7 @@
 # RUN mix compile
 
 # RUN mix release
-# RUN mix release
 
-# # --- Runtime stage ---
 # FROM alpine:3.21.0 AS runtime
 
 # RUN apk add --no-cache openssl ncurses libstdc++ postgresql-client bash
@@ -34,21 +32,7 @@
 # WORKDIR /app
 # COPY --from=builder /app/_build/prod/rel/laura ./
 
-# # Agregamos script de arranque
-# COPY <<EOF /app/start.sh
-# #!/bin/sh
-# set -e
-
-# echo "🔄 Running database migrations..."
-# /app/bin/laura eval "Laura.Release.migrate"
-
-# echo "🚀 Starting Laura..."
-# exec /app/bin/laura start
-# EOF
-
-# RUN chmod +x /app/start.sh
-
-# ENTRYPOINT ["/app/start.sh"]
+# CMD ["bin/laura", "start"]
 
 FROM hexpm/elixir:1.18.1-erlang-27.2-alpine-3.21.0 AS builder
 
@@ -69,13 +53,14 @@ COPY config config
 COPY assets assets
 
 RUN cd assets && npm install
-RUN MIX_ENV=prod mix assets.deploy && MIX_ENV=prod mix phx.digest
+RUN mix assets.deploy
 
 COPY lib lib
 COPY priv priv
 RUN mix compile
 
 RUN mix release
+RUN phx.digest
 
 # --- Runtime stage ---
 FROM alpine:3.21.0 AS runtime
@@ -85,6 +70,7 @@ RUN apk add --no-cache openssl ncurses libstdc++ postgresql-client bash
 WORKDIR /app
 COPY --from=builder /app/_build/prod/rel/laura ./
 
+# Agregamos script de arranque
 COPY <<EOF /app/start.sh
 #!/bin/sh
 set -e
@@ -99,4 +85,3 @@ EOF
 RUN chmod +x /app/start.sh
 
 ENTRYPOINT ["/app/start.sh"]
-
