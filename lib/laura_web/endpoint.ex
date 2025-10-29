@@ -33,6 +33,17 @@ defmodule LauraWeb.Endpoint do
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
     plug Phoenix.Ecto.CheckRepoStatus, otp_app: :laura
+  else
+    # ⚠️ ESTE ES EL CÓDIGO DE PRODUCCIÓN:
+    plug Plug.Static,
+      at: "/",
+      # Debe apuntar a la carpeta donde `mix assets.deploy` guarda los archivos
+      from: :laura,
+      # **MUY IMPORTANTE:** Esto usa el archivo `cache_manifest.json` generado
+      # por `phx.digest` para servir los archivos con nombres de hash (ej: app-XYZ.css)
+      gzip: true,
+      only: ~w(assets fonts images favicon.ico robots.txt),
+      cache_manifest: "priv/static/cache_manifest.json"
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
