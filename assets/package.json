@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "deploy": "mix assets.deploy",
+    "watch": "mix assets.watch"
+  },
   "dependencies": {
     "@tailwindcss/forms": "^0.5.10",
     "daisyui": "^5.3.10"
