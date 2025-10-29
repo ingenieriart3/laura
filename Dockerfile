@@ -1,39 +1,52 @@
-# Dockerfile CORREGIDO
 FROM hexpm/elixir:1.16-alpine AS builder
 
-# Configurar environment de producción
 ENV MIX_ENV=prod
 
-RUN apk add --no-cache build-base git npm postgresql-client
+# Instalar dependencias del sistema
+RUN apk add --upgrade --no-cache \
+    build-base \
+    git \
+    nodejs \
+    npm \
+    postgresql-client
 
-RUN mkdir /app
 WORKDIR /app
 
-RUN mix local.hex --force && mix local.rebar --force
+# Configurar Mix
+RUN mix local.hex --force && \
+    mix local.rebar --force
 
-# Copiar archivos de configuración primero
+# Instalar dependencias de Elixir
 COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
 RUN mix deps.compile
 
-# Copiar configuración y compilar assets
-COPY config config
+# Instalar dependencias de Node.js y compilar assets
 COPY assets assets
-RUN cd assets && npm install
-RUN mix assets.deploy
+RUN cd assets && \
+    npm install && \
+    npm run deploy
 
-# Copiar código y compilar
+# Copiar resto de la aplicación
+COPY config config
 COPY lib lib
 COPY priv priv
 RUN mix compile
 
+# Compilar assets con Mix
+RUN mix phx.digest
+
 # Crear release
 RUN mix release
 
-# Runtime image
+# Runtime
 FROM alpine:3.19 AS runtime
 
-RUN apk add --no-cache openssl ncurses libstdc++ postgresql-client bash
+RUN apk add --no-cache \
+    openssl \
+    ncurses-libs \
+    libstdc++ \
+    postgresql-client
 
 WORKDIR /app
 COPY --from=builder /app/_build/prod/rel/laura ./
