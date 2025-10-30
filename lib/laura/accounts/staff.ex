@@ -47,9 +47,18 @@ defmodule Laura.Accounts.Staff do
     |> unique_constraint([:email, :health_brand_id])
   end
 
+  # def magic_link_changeset(staff, attrs) do
+  #   staff
+  #   |> cast(attrs, [:magic_link_token, :magic_link_sent_at, :magic_link_expires_at, :last_magic_link_ip])
+  #   |> validate_required([:magic_link_token, :magic_link_sent_at, :magic_link_expires_at])
+  # end
+
   def magic_link_changeset(staff, attrs) do
     staff
-    |> cast(attrs, [:magic_link_token, :magic_link_sent_at, :magic_link_expires_at, :last_magic_link_ip])
+    |> cast(attrs, [
+      :magic_link_token, :magic_link_sent_at, :magic_link_expires_at,
+      :last_magic_link_ip, :magic_link_attempts
+    ])
     |> validate_required([:magic_link_token, :magic_link_sent_at, :magic_link_expires_at])
   end
 end

@@ -67,7 +67,9 @@ defmodule Laura.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:httpoison, "~> 2.0"},
-      # {:jason, "~> 1.4"}
+      {:finch, "~> 0.13"},
+      {:hackney, "~> 1.9"},
+      {:sendgrid, "~> 1.4"}  # O el adapter que prefieras
     ]
   end
 

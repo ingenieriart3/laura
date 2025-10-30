@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-gray-50">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Dashboard · Laura Health</title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"}/>
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
+  </head>
+  <body class="h-full">
+    <div class="min-h-screen bg-gray-50">
+      <!-- Header SIMPLIFICADO solo para dashboard -->
+      <header class="bg-white shadow">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center">
+              <h1 class="text-2xl font-bold text-gray-900">Laura Health</h1>
+              <span class="ml-4 text-sm text-gray-500">| Dashboard</span>
+            </div>
+            <div class="flex items-center space-x-4">
+              <span class="text-gray-600">Hola, admin!</span>
+              <a 
+                href="/auth/logout" 
+                class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium"
+              >
+                Cerrar sesión
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content (el mismo que teníamos) -->
+      <main>
+        <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div class="px-4 py-6 sm:px-0">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <!-- Trial Status -->
+              <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Estado del Trial</dt>
+                        <dd class="text-lg font-medium text-gray-900">Activo</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-gray-50 px-5 py-3">
+                  <div class="text-sm">
+                    <span class="text-gray-600">Hasta: 29 Nov 2025</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Health Brand -->
+              <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Health Brand</dt>
+                        <dd class="text-lg font-medium text-gray-900">Clínica Demo</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-gray-50 px-5 py-3">
+                  <div class="text-sm">
+                    <span class="text-gray-600">Subdominio: demo</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Plan Actual -->
+              <div class="bg-white overflow-hidden shadow rounded-lg">
+                <div class="p-5">
+                  <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                      <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Plan Actual</dt>
+                        <dd class="text-lg font-medium text-gray-900">Básico</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <div class="bg-gray-50 px-5 py-3">
+                  <div class="text-sm">
+                    <span class="text-gray-600">100 recordatorios/mes</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Welcome Message -->
+            <div class="mt-8 bg-white shadow rounded-lg p-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4">¡Bienvenido a Laura Health! 🎉</h2>
+              <p class="text-gray-600 mb-4">
+                Tu trial está activo y listo para usar. Aquí puedes administrar tu clínica y configurar recordatorios automáticos.
+              </p>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                <!-- Quick Actions -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-3">Acciones Rápidas</h3>
+                  <ul class="space-y-2">
+                    <li>
+                      <a href="#" class="text-blue-600 hover:text-blue-800">Configurar recordatorios</a>
+                    </li>
+                    <li>
+                      <a href="#" class="text-blue-600 hover:text-blue-800">Gestionar staff</a>
+                    </li>
+                    <li>
+                      <a href="#" class="text-blue-600 hover:text-blue-800">Ver analytics</a>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <h3 class="text-lg font-semibold text-gray-900 mb-3">Próximos Pasos</h3>
+                  <ul class="space-y-2 text-gray-600">
+                    <li>• Configura tus horarios de atención</li>
+                    <li>• Agrega tu equipo médico</li>
+                    <li>• Personaliza tus mensajes</li>
+                    <li>• Conecta tu WhatsApp Business</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
