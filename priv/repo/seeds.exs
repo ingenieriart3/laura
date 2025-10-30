@@ -45,7 +45,7 @@ IO.puts "✅ Demo health brand created (30-day trial active)"
 
 # Create admin staff for demo
 {:ok, admin_staff} = Accounts.create_staff(%{
-  email: "admin@demo.com",
+  email: "ingenieriart3@gmail.com",
   health_brand_id: demo_brand.id,
   staff_role_id: admin_role.id,
   confirmed_at: NaiveDateTime.utc_now(),
@@ -54,7 +54,7 @@ IO.puts "✅ Demo health brand created (30-day trial active)"
 
 # Create doctor staff
 {:ok, doctor_staff} = Accounts.create_staff(%{
-  email: "doctor@demo.com",
+  email: "sana.medintegrativa@gmail.com",
   health_brand_id: demo_brand.id,
   staff_role_id: doctor_role.id,
   confirmed_at: NaiveDateTime.utc_now(),

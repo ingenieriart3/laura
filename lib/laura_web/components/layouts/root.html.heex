@@ -1,8 +1,5 @@
-<!-- lib/laura_web/components/layouts/root.html.heex -->
 <!DOCTYPE html>
-<!--<html lang="es" data-theme="corporate"> -->
 <html lang="es" data-theme="business">
-<!--<html lang="es" data-theme="corporate" class="theme-corporate">-->
   <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -12,57 +9,51 @@
     </.live_title>
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"}/>
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}></script>
-    <!-- <style>
-      .debug-test { 
-        background: red !important; 
-        color: white !important;
-        padding: 20px !important;
-      }
-    </style>-->
-    <!-- En root.html.heex - TEMPORAL -->
-<!--<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet">-->
   </head>
   <body class="bg-base-100">
-  <!--<div class="debug-test">✅ ESTILOS FUNCIONAN</div>-->
-    <!-- Navigation Global -->
-    <nav class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
-      <div class="navbar-start">
-        <a class="btn btn-ghost text-xl" href="/">
-          <span class="text-primary font-bold">Laura</span>
-          <span class="text-base-content/70">.ia3.art</span>
-        </a>
-      </div>
-      
-      <div class="navbar-center hidden lg:flex">
-        <ul class="menu menu-horizontal px-1">
-          <li><a href="/features">Características</a></li>
-          <li><a href="/pricing">Precios</a></li>
-          <li><a href="/contact">Contacto</a></li>
-        </ul>
-      </div>
-      
-      <div class="navbar-end">
-        <a href="/register" class="btn btn-primary btn-sm">
-          Comenzar Gratis
-        </a>
-      </div>
-    </nav>
+    <!-- Navigation Global - SOLO mostrar si NO hay sesión activa -->
+    <%= if !@current_staff do %>
+      <nav class="navbar bg-base-100 shadow-sm sticky top-0 z-50">
+        <div class="navbar-start">
+          <a class="btn btn-ghost text-xl" href="/">
+            <span class="text-primary font-bold">Laura</span>
+            <span class="text-base-content/70">.ia3.art</span>
+          </a>
+        </div>
+        
+        <div class="navbar-center hidden lg:flex">
+          <ul class="menu menu-horizontal px-1">
+            <li><a href="/features">Características</a></li>
+            <li><a href="/pricing">Precios</a></li>
+            <li><a href="/contact">Contacto</a></li>
+          </ul>
+        </div>
+        
+        <div class="navbar-end">
+          <a href="/register" class="btn btn-primary btn-sm">
+            Comenzar Gratis
+          </a>
+        </div>
+      </nav>
+    <% end %>
 
     <!-- Main Content -->
     <main class="min-h-screen">
       <%= @inner_content %>
     </main>
 
-    <!-- Footer Global -->
-    <footer class="footer footer-center p-10 bg-base-200 text-base-content">
-      <aside>
-        <div class="flex items-center gap-2 mb-4">
-          <span class="text-primary font-bold text-xl">Laura</span>
-          <span class="text-base-content/70">by ia3.art</span>
-        </div>
-        <p class="font-bold">Plataforma de gestión médica moderna</p>
-        <p>Copyright © 2024 - Todos los derechos reservados</p>
-      </aside>
-    </footer>
+    <!-- Footer Global - SOLO mostrar si NO hay sesión activa -->
+    <%= if !@current_staff do %>
+      <footer class="footer footer-center p-10 bg-base-200 text-base-content">
+        <aside>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-primary font-bold text-xl">Laura</span>
+            <span class="text-base-content/70">by ia3.art</span>
+          </div>
+          <p class="font-bold">Plataforma de gestión médica moderna</p>
+          <p>Copyright © 2024 - Todos los derechos reservados</p>
+        </aside>
+      </footer>
+    <% end %>
   </body>
 </html>
