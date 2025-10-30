@@ -1,66 +1,178 @@
-<!-- lib/laura_web/controllers/registration_html/new.html.heex -->
-<div class="hero min-h-screen bg-base-200">
-  <div class="hero-content flex-col">
-    <div class="text-center">
-      <h1 class="text-4xl font-bold">Comenzar es muy fácil</h1>
-      <p class="py-6">Prueba Laura gratis por 30 días. Sin compromisos.</p>
+<div class="min-h-screen bg-base-100 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">
+        Comienza tu <span class="text-primary">Trial Gratis</span>
+      </h1>
+      <p class="text-xl text-gray-600">
+        30 días completos · Sin tarjeta requerida
+      </p>
     </div>
-    
-    <div class="card w-full max-w-md shadow-2xl bg-base-100">
-      <form class="card-body" action="/register" method="post">
-        <input type="hidden" name="_csrf_token" value={get_csrf_token()} />
-        
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Email profesional</span>
-          </label>
-          <input 
-            type="email" 
-            name="registration[email]"
-            placeholder="tu@clinica.com" 
-            class="input input-bordered" 
-            required 
-          />
-        </div>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Nombre de tu consultorio</span>
-          </label>
-          <input 
-            type="text" 
-            name="registration[clinic_name]"
-            placeholder="Consultorio Dr. García" 
-            class="input input-bordered" 
-            required 
-          />
-        </div>
-
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">Plan elegido</span>
-          </label>
-          <select name="registration[plan]" class="select select-bordered w-full">
-            <%= for plan <- @plans do %>
-              <option 
-                value={plan.code} 
-                selected={plan.code == @default_plan}
-              >
-                <%= plan.name %> - $<%= div(plan.price_monthly, 100) %>/mes
-              </option>
+    <!-- Formulario -->
+    <div class="bg-white shadow-xl rounded-2xl p-8">
+      <.form :let={f} for={@changeset} action={~p"/register"} class="space-y-6">
+        <!-- Información de la Clínica -->
+        <div class="space-y-4">
+          <h2 class="text-2xl font-semibold text-gray-900">Información de tu Clínica</h2>
+          
+          <!-- Nombre de la Clínica -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-semibold">Nombre de la Clínica *</span>
+            </label>
+            <.input 
+              field={f[:name]}
+              type="text" 
+              class="input input-bordered w-full" 
+              placeholder="Ej: Clínica Salud Integral"
+              required
+            />
+            <%= if f[:name].errors do %>
+              <div class="text-error text-sm mt-1">
+                <%= for error <- f[:name].errors do %>
+                  <p><%= translate_error(error) %></p>
+                <% end %>
+              </div>
             <% end %>
-          </select>
+          </div>
+
+          <!-- Subdominio -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-semibold">Subdominio *</span>
+            </label>
+            <div class="join w-full">
+              <.input 
+                field={f[:subdomain]}
+                type="text" 
+                class="input input-bordered join-item w-full" 
+                placeholder="tu-clinica"
+                required
+                phx-debounce="300"
+              />
+              <span class="join-item bg-base-200 px-4 flex items-center border border-base-300">
+                .laura.ia3.art
+              </span>
+            </div>
+            <label class="label">
+              <span class="label-text-alt text-gray-500">
+                Será tu URL única: <strong>tu-subdominio</strong>.laura.ia3.art
+              </span>
+            </label>
+            <%= if f[:subdomain].errors do %>
+              <div class="text-error text-sm mt-1">
+                <%= for error <- f[:subdomain].errors do %>
+                  <p><%= translate_error(error) %></p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
         </div>
 
-        <div class="form-control mt-6">
-          <button class="btn btn-primary btn-lg">Comenzar Prueba Gratis</button>
+        <!-- Información del Administrador -->
+        <div class="space-y-4 pt-6 border-t border-gray-200">
+          <h2 class="text-2xl font-semibold text-gray-900">Tu Cuenta de Administrador</h2>
+          
+          <!-- Email -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-semibold">Tu Email *</span>
+            </label>
+            <.input 
+              field={f[:email]}
+              type="email" 
+              class="input input-bordered w-full" 
+              placeholder="tu@email.com"
+              required
+            />
+            <label class="label">
+              <span class="label-text-alt text-gray-500">
+                Te enviaremos un enlace mágico para acceder
+              </span>
+            </label>
+            <%= if f[:email].errors do %>
+              <div class="text-error text-sm mt-1">
+                <%= for error <- f[:email].errors do %>
+                  <p><%= translate_error(error) %></p>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
         </div>
 
-        <div class="text-center text-sm text-base-content/70 mt-4">
-          Al registrarte aceptas nuestros 
-          <a href="/terms" class="link link-primary">Términos de Servicio</a>
+        <!-- Plan Seleccionado -->
+        <div class="bg-primary/10 border border-primary/20 rounded-lg p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-semibold text-primary">Plan Básico Incluido</h3>
+              <p class="text-sm text-gray-600">100 recordatorios mensuales · WhatsApp incluido</p>
+            </div>
+            <span class="badge badge-primary badge-lg">Trial 30 Días</span>
+          </div>
         </div>
-      </form>
+
+        <!-- Términos y Condiciones -->
+        <div class="form-control">
+          <label class="label cursor-pointer justify-start gap-3">
+            <input type="checkbox" class="checkbox checkbox-primary" required />
+            <span class="label-text">
+              Acepto los <a href="/terms" class="link link-primary">Términos de Servicio</a> 
+              y <a href="/privacy" class="link link-primary">Política de Privacidad</a>
+            </span>
+          </label>
+        </div>
+
+        <!-- Submit -->
+        <div class="pt-4">
+          <button 
+            type="submit" 
+            class="btn btn-primary btn-lg w-full text-lg"
+            phx-disable-with="Creando tu clínica..."
+          >
+            🚀 Comenzar Trial Gratis
+          </button>
+          
+          <p class="text-center text-gray-500 mt-4">
+            ¿Ya tienes una cuenta? 
+            <a href="/auth" class="link link-primary font-semibold">Inicia sesión aquí</a>
+          </p>
+        </div>
+      </.form>
+    </div>
+
+    <!-- Features -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 text-center">
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Sin Compromiso</h3>
+        <p class="text-gray-600 text-sm">Cancela cuando quieras sin costo</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">WhatsApp Integrado</h3>
+        <p class="text-gray-600 text-sm">Recordatorios automáticos por WhatsApp</p>
+      </div>
+
+      <div class="bg-white p-6 rounded-lg shadow-sm">
+        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+          </svg>
+        </div>
+        <h3 class="font-semibold text-gray-900 mb-2">Seguro y Confiable</h3>
+        <p class="text-gray-600 text-sm">Datos encriptados y backups automáticos</p>
+      </div>
     </div>
   </div>
 </div>
