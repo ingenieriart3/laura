@@ -9,7 +9,7 @@
   </head>
   <body class="h-full">
     <div class="min-h-screen bg-gray-50">
-      <!-- Header SIMPLIFICADO solo para dashboard -->
+      <!-- Header con datos REALES -->
       <header class="bg-white shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div class="flex justify-between items-center">
@@ -18,7 +18,10 @@
               <span class="ml-4 text-sm text-gray-500">| Dashboard</span>
             </div>
             <div class="flex items-center space-x-4">
-              <span class="text-gray-600">Hola, admin!</span>
+              <span class="text-gray-600">Hola, <%= @current_staff.email %>!</span>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                <%= @current_staff.staff_role.name %>
+              </span>
               <a 
                 href="/auth/logout" 
                 class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium"
@@ -30,34 +33,38 @@
         </div>
       </header>
 
-      <!-- Main Content (el mismo que teníamos) -->
+      <!-- Main Content -->
       <main>
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div class="px-4 py-6 sm:px-0">
-            <!-- Stats Cards -->
+            <!-- Stats Cards con datos REALES -->
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               <!-- Trial Status -->
               <div class="bg-white overflow-hidden shadow rounded-lg">
                 <div class="p-5">
                   <div class="flex items-center">
                     <div class="flex-shrink-0">
-                      <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div class={"w-8 h-8 rounded-full flex items-center justify-center #{trial_status_color(@health_brand)}"}>
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                         </svg>
                       </div>
                     </div>
                     <div class="ml-5 w-0 flex-1">
                       <dl>
-                        <dt class="text-sm font-medium text-gray-500 truncate">Estado del Trial</dt>
-                        <dd class="text-lg font-medium text-gray-900">Activo</dd>
+                        <dt class="text-sm font-medium text-gray-500 truncate">Estado</dt>
+                        <dd class="text-lg font-medium text-gray-900">
+                          <%= trial_status_text(@health_brand) %>
+                        </dd>
                       </dl>
                     </div>
                   </div>
                 </div>
                 <div class="bg-gray-50 px-5 py-3">
                   <div class="text-sm">
-                    <span class="text-gray-600">Hasta: 29 Nov 2025</span>
+                    <span class="text-gray-600">
+                      <%= trial_ends_text(@health_brand) %>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -76,14 +83,14 @@
                     <div class="ml-5 w-0 flex-1">
                       <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Health Brand</dt>
-                        <dd class="text-lg font-medium text-gray-900">Clínica Demo</dd>
+                        <dd class="text-lg font-medium text-gray-900"><%= @health_brand.name %></dd>
                       </dl>
                     </div>
                   </div>
                 </div>
                 <div class="bg-gray-50 px-5 py-3">
                   <div class="text-sm">
-                    <span class="text-gray-600">Subdominio: demo</span>
+                    <span class="text-gray-600">Subdominio: <%= @health_brand.subdomain %></span>
                   </div>
                 </div>
               </div>
@@ -102,36 +109,56 @@
                     <div class="ml-5 w-0 flex-1">
                       <dl>
                         <dt class="text-sm font-medium text-gray-500 truncate">Plan Actual</dt>
-                        <dd class="text-lg font-medium text-gray-900">Básico</dd>
+                        <dd class="text-lg font-medium text-gray-900">
+                          <%= if @health_brand.subscription_plan do %>
+                            <%= @health_brand.subscription_plan.name %>
+                          <% else %>
+                            Trial
+                          <% end %>
+                        </dd>
                       </dl>
                     </div>
                   </div>
                 </div>
                 <div class="bg-gray-50 px-5 py-3">
                   <div class="text-sm">
-                    <span class="text-gray-600">100 recordatorios/mes</span>
+                    <span class="text-gray-600">
+                      <%= if @health_brand.subscription_plan do %>
+                        <%= @health_brand.subscription_plan.reminders_included %> recordatorios/mes
+                      <% else %>
+                        Plan básico incluido
+                      <% end %>
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Welcome Message -->
+            <!-- Welcome Message Personalizado -->
             <div class="mt-8 bg-white shadow rounded-lg p-6">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4">¡Bienvenido a Laura Health! 🎉</h2>
+              <h2 class="text-2xl font-bold text-gray-900 mb-4">
+                ¡Bienvenido a Laura Health, <%= String.split(@current_staff.email, "@") |> hd %>! 🎉
+              </h2>
               <p class="text-gray-600 mb-4">
-                Tu trial está activo y listo para usar. Aquí puedes administrar tu clínica y configurar recordatorios automáticos.
+                Tu trial de <strong><%= @health_brand.name %></strong> está activo y listo para usar. 
+                Rol: <span class="font-semibold text-blue-600"><%= @current_staff.staff_role.name %></span>.
               </p>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                <!-- Quick Actions -->
+                <!-- Quick Actions según rol -->
                 <div class="border border-gray-200 rounded-lg p-4">
                   <h3 class="text-lg font-semibold text-gray-900 mb-3">Acciones Rápidas</h3>
                   <ul class="space-y-2">
+                    <%= if @current_staff.staff_role.name == "admin" do %>
+                      <li>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">Gestionar staff</a>
+                      </li>
+                      <li>
+                        <a href="#" class="text-blue-600 hover:text-blue-800">Configurar clínica</a>
+                      </li>
+                    <% end %>
                     <li>
                       <a href="#" class="text-blue-600 hover:text-blue-800">Configurar recordatorios</a>
-                    </li>
-                    <li>
-                      <a href="#" class="text-blue-600 hover:text-blue-800">Gestionar staff</a>
                     </li>
                     <li>
                       <a href="#" class="text-blue-600 hover:text-blue-800">Ver analytics</a>
@@ -148,6 +175,35 @@
                     <li>• Personaliza tus mensajes</li>
                     <li>• Conecta tu WhatsApp Business</li>
                   </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Información de Uso -->
+            <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <h3 class="text-lg font-semibold text-blue-900 mb-3">📊 Resumen de Uso</h3>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div>
+                  <p class="text-2xl font-bold text-blue-600">0</p>
+                  <p class="text-sm text-blue-800">Recordatorios usados</p>
+                </div>
+                <div>
+                  <p class="text-2xl font-bold text-green-600">
+                    <%= if @health_brand.subscription_plan do %>
+                      <%= @health_brand.subscription_plan.reminders_included %>
+                    <% else %>
+                      100
+                    <% end %>
+                  </p>
+                  <p class="text-sm text-green-800">Incluidos en plan</p>
+                </div>
+                <div>
+                  <p class="text-2xl font-bold text-purple-600">0</p>
+                  <p class="text-sm text-purple-800">Pacientes activos</p>
+                </div>
+                <div>
+                  <p class="text-2xl font-bold text-orange-600">0</p>
+                  <p class="text-sm text-orange-800">Staff registrado</p>
                 </div>
               </div>
             </div>

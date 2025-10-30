@@ -54,6 +54,7 @@ defmodule LauraWeb.Router do
     plug :put_root_layout, html: {LauraWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug LauraWeb.AuthPlug
   end
 
   pipeline :api do
