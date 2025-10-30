@@ -39,11 +39,29 @@ defmodule LauraWeb.RegistrationController do
 
       {:error, :email_already_exists} ->
         plans = Billing.list_public_subscription_plans()
-        changeset = Platform.change_health_brand(%HealthBrand{})
+        changeset = Platform.change_health_brand(%HealthBrand{}) |> Ecto.Changeset.add_error(:email, "ya está registrado en otra clínica")
 
         conn
         |> put_flash(:error, "Este email ya está registrado en otra clínica.")
-        |> render(:new, changeset: changeset, plans: plans, current_staff: conn.assigns[:current_staff])
+        |> render(:new,
+             changeset: changeset,
+             plans: plans,
+             current_staff: conn.assigns[:current_staff],
+             email_error: true
+           )
+
+      {:error, :subdomain_already_exists} ->
+        plans = Billing.list_public_subscription_plans()
+        changeset = Platform.change_health_brand(%HealthBrand{}) |> Ecto.Changeset.add_error(:subdomain, "ya está en uso")
+
+        conn
+        |> put_flash(:error, "Este subdominio ya está en uso. Por favor elige otro.")
+        |> render(:new,
+             changeset: changeset,
+             plans: plans,
+             current_staff: conn.assigns[:current_staff],
+             subdomain_error: true
+           )
 
       {:error, :health_brand, changeset, _} ->
         plans = Billing.list_public_subscription_plans()
@@ -64,12 +82,16 @@ defmodule LauraWeb.RegistrationController do
     Repo.transaction(fn ->
       with {:ok, plan} <- get_plan(plan_code),
            {:email_available, true} <- {:email_available, email_available?(staff_attrs.email)},
+           {:subdomain_available, true} <- {:subdomain_available, subdomain_available?(health_brand_attrs.subdomain)},
            {:ok, health_brand} <- create_health_brand(health_brand_attrs, plan.id),
            {:ok, staff} <- create_admin_staff(health_brand.id, staff_attrs) do
         %{health_brand: health_brand, staff: staff}
       else
         {:email_available, false} ->
           Repo.rollback(:email_already_exists)
+
+        {:subdomain_available, false} ->
+          Repo.rollback(:subdomain_already_exists)
 
         {:error, :plan_not_found} ->
           Repo.rollback(:plan_not_found)
@@ -94,6 +116,13 @@ defmodule LauraWeb.RegistrationController do
     case Accounts.get_staff_by_email(email) do
       {:ok, _staff} -> false
       {:error, :not_found} -> true
+    end
+  end
+
+  defp subdomain_available?(subdomain) do
+    case Platform.get_health_brand_by_subdomain(subdomain) do
+      nil -> true
+      _ -> false
     end
   end
 
