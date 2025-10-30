@@ -1,20 +1,26 @@
-# priv/repo/migrations/20240101000003_create_payment_events.exs
+# priv/repo/migrations/20251030013005_create_payment_events.exs
 defmodule Laura.Repo.Migrations.CreatePaymentEvents do
   use Ecto.Migration
 
   def change do
     create table(:payment_events, primary_key: false) do
       add :id, :binary_id, primary_key: true
+      add :health_brand_id, :binary_id, null: false
       add :event_type, :string, null: false
+      add :amount, :decimal, precision: 10, scale: 2
+      add :currency, :string, default: "ARS"
+      add :status, :string, null: false
+
+      # MercadoPago fields
       add :mp_payment_id, :string
       add :mp_merchant_order_id, :string
-      add :status, :string
-      add :amount, :integer
+      add :mp_preference_id, :string
+      add :mp_notification_url, :string
+
+      # Metadata
       add :metadata, :map, default: %{}
 
-      add :health_brand_id, references(:health_brands, type: :binary_id), null: false
-
-      timestamps()
+      timestamps(type: :naive_datetime)
     end
 
     create index(:payment_events, [:health_brand_id])

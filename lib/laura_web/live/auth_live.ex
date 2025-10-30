@@ -238,7 +238,8 @@
 # lib/laura_web/live/auth_live.ex
 defmodule LauraWeb.AuthLive do
   use LauraWeb, :live_view
-  alias Laura.{Accounts, Platform}
+  # alias Laura.{Accounts, Platform}
+  alias Laura.{Accounts}
 
   @impl true
   def mount(_params, _session, socket) do

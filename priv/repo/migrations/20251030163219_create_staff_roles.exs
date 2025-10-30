@@ -1,4 +1,4 @@
-# priv/repo/migrations/20251030011154_create_staff_roles.exs
+# priv/repo/migrations/20251030013002_create_staff_roles.exs
 defmodule Laura.Repo.Migrations.CreateStaffRoles do
   use Ecto.Migration
 
