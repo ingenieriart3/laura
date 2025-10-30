@@ -13,6 +13,14 @@ defmodule Laura.Platform do
     |> Repo.insert()
   end
 
+  # def change_health_brand(%HealthBrand{} = health_brand, attrs \\ %{}) do
+  #   HealthBrand.registration_changeset(health_brand, attrs)
+  # end
+
+  def change_health_brand(%HealthBrand{} = health_brand, attrs \\ %{}) do
+    HealthBrand.changeset(health_brand, attrs)
+  end
+
   def update_health_brand(%HealthBrand{} = health_brand, attrs) do
     health_brand
     |> HealthBrand.changeset(attrs)

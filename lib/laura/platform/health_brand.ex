@@ -42,13 +42,6 @@ defmodule Laura.Platform.HealthBrand do
     |> validate_inclusion(:subscription_status, ["trial", "active", "past_due", "canceled", "incomplete"])
   end
 
-  # def trial_changeset(health_brand, attrs) do
-  #   health_brand
-  #   |> changeset(attrs)
-  #   |> put_change(:trial_activated_at, NaiveDateTime.utc_now())
-  #   |> put_change(:trial_ends_at, NaiveDateTime.add(NaiveDateTime.utc_now(), 30 * 24 * 60 * 60))
-  #   |> put_change(:subscription_status, "trial")
-  # end
   def trial_changeset(health_brand, attrs) do
     now = NaiveDateTime.utc_now() |> NaiveDateTime.truncate(:second)
     trial_ends_at = NaiveDateTime.add(now, 30 * 24 * 60 * 60) |> NaiveDateTime.truncate(:second)
@@ -58,5 +51,14 @@ defmodule Laura.Platform.HealthBrand do
     |> put_change(:trial_activated_at, now)
     |> put_change(:trial_ends_at, trial_ends_at)
     |> put_change(:subscription_status, "trial")
+  end
+
+  def registration_changeset(health_brand, attrs) do
+    health_brand
+    |> cast(attrs, [:name, :subdomain, :email])
+    |> validate_required([:name, :subdomain, :email])
+    |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "debe tener el formato correcto")
+    |> validate_length(:subdomain, min: 3, max: 30)
+    |> validate_format(:subdomain, ~r/^[a-z0-9-]+$/, message: "solo puede contener letras minúsculas, números y guiones")
   end
 end

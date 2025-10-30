@@ -1,0 +1,152 @@
+<!-- lib/laura_web/controllers/landing_html/pricing.html.heex -->
+<div class="bg-base-100 min-h-screen py-12">
+  <div class="container mx-auto px-4">
+    <!-- Header -->
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Precios Transparentes</h1>
+      <p class="text-xl text-base-content/70 max-w-2xl mx-auto">
+        Elige el plan perfecto para tu consultorio. Todos incluyen 30 días de prueba gratis.
+      </p>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <%= for plan <- @plans do %>
+        <div class={"card bg-base-200 shadow-xl border-2 #{if plan.recommended, do: "border-accent border-2 relative", else: "border-transparent"}"}>
+          <%= if plan.recommended do %>
+            <div class="badge badge-accent absolute -top-3 left-1/2 transform -translate-x-1/2">
+              Más Popular
+            </div>
+          <% end %>
+          
+          <div class="card-body">
+            <!-- Plan Header -->
+            <div class="text-center mb-6">
+              <h3 class="card-title text-2xl justify-center mb-2"><%= plan.name %></h3>
+              <div class="flex items-baseline justify-center gap-1 mb-2">
+                <span class="text-4xl font-bold">$<%= div(plan.price_monthly, 100) %></span>
+                <span class="text-base-content/70">/mes</span>
+              </div>
+              <p class="text-sm text-base-content/70">Después de 30 días gratis</p>
+            </div>
+
+            <!-- Features -->
+            <ul class="space-y-3 mb-8 flex-1">
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span>
+                  <%= if plan.staff_limit do %>
+                    <strong><%= plan.staff_limit %> especialista(s)</strong>
+                  <% else %>
+                    <strong>Especialistas ilimitados</strong>
+                  <% end %>
+                </span>
+              </li>
+
+              <li class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                </svg>
+                <span>
+                  <%= if plan.reminder_limit do %>
+                    <strong><%= plan.reminder_limit %> recordatorios/mes</strong>
+                  <% else %>
+                    <strong>Recordatorios ilimitados</strong>
+                  <% end %>
+                </span>
+              </li>
+
+              <%= if plan.features["hce"] do %>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>Historia Clínica Digital</span>
+                </li>
+              <% end %>
+
+              <%= if plan.features["reports"] do %>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>Reportes y Analytics</span>
+                </li>
+              <% end %>
+
+              <%= if plan.features["telemedicine"] do %>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>Módulo de Telemedicina</span>
+                </li>
+              <% end %>
+
+              <%= if plan.features["api_access"] do %>
+                <li class="flex items-start gap-3">
+                  <svg class="w-5 h-5 text-success mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                  </svg>
+                  <span>Acceso a API</span>
+                </li>
+              <% end %>
+            </ul>
+
+            <!-- CTA Button -->
+            <div class="card-actions justify-center">
+              <a 
+                href={"/register?plan=#{plan.code}"} 
+                class={"btn w-full #{if plan.recommended, do: "btn-accent", else: "btn-primary"}"}
+              >
+                Comenzar Prueba
+              </a>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="max-w-3xl mx-auto mt-20">
+      <h2 class="text-3xl font-bold text-center mb-12">Preguntas Frecuentes</h2>
+      
+      <div class="space-y-6">
+        <!-- FAQ 1 -->
+        <div class="collapse collapse-plus bg-base-200">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-xl font-medium">
+            ¿Puedo cambiar de plan después?
+          </div>
+          <div class="collapse-content">
+            <p>Sí, puedes cambiar entre planes en cualquier momento. La diferencia se prorrateará automáticamente.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="collapse collapse-plus bg-base-200">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-xl font-medium">
+            ¿Qué pasa después de los 30 días gratis?
+          </div>
+          <div class="collapse-content">
+            <p>Tu plan elegido se activará automáticamente. Puedes cancelar en cualquier momento antes de que termine el período de prueba.</p>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="collapse collapse-plus bg-base-200">
+          <input type="radio" name="faq-accordion" />
+          <div class="collapse-title text-xl font-medium">
+            ¿Necesito tarjeta de crédito para la prueba?
+          </div>
+          <div class="collapse-content">
+            <p>No, la prueba de 30 días es completamente gratuita y no requiere tarjeta de crédito.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
