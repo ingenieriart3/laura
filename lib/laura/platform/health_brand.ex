@@ -13,9 +13,9 @@ defmodule Laura.Platform.HealthBrand do
 
     # Subscription fields
     field :subscription_status, :string
-    field :trial_ends_at, :utc_datetime
-    field :trial_activated_at, :utc_datetime
-    field :current_period_end, :utc_datetime
+    field :trial_ends_at, :naive_datetime
+    field :trial_activated_at, :naive_datetime
+    field :current_period_end, :naive_datetime
     field :reminders_used_current_month, :integer
 
     # MercadoPago fields
@@ -28,7 +28,7 @@ defmodule Laura.Platform.HealthBrand do
     has_many :staffs, Laura.Accounts.Staff
     has_many :payment_events, Laura.Billing.PaymentEvent
 
-    timestamps()
+    timestamps(type: :naive_datetime)
   end
 
   def registration_changeset(health_brand, attrs, trial_days \\ 30) do
@@ -39,7 +39,7 @@ defmodule Laura.Platform.HealthBrand do
     |> validate_required([:name, :subdomain])
     |> unique_constraint(:subdomain)
     |> put_change(:trial_ends_at, trial_ends_at)
-    |> put_change(:trial_activated_at, DateTime.utc_now())
+    # |> put_change(:trial_activated_at, DateTime.utc_now())
     |> put_change(:subscription_status, "trial")
     |> put_change(:is_active, true)
   end

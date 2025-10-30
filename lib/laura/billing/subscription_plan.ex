@@ -18,7 +18,7 @@ defmodule Laura.Billing.SubscriptionPlan do
 
     has_many :health_brands, Laura.Platform.HealthBrand
 
-    timestamps()
+    timestamps(type: :naive_datetime)
   end
 
   def changeset(subscription_plan, attrs) do

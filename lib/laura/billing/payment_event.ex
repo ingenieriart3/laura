@@ -16,7 +16,7 @@ defmodule Laura.Billing.PaymentEvent do
 
     belongs_to :health_brand, Laura.Platform.HealthBrand
 
-    timestamps()
+    timestamps(type: :naive_datetime)
   end
 
   def changeset(payment_event, attrs) do

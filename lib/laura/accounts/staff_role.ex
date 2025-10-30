@@ -12,7 +12,7 @@ defmodule Laura.Accounts.StaffRole do
 
     has_many :staffs, Laura.Accounts.Staff
 
-    timestamps()
+    timestamps(type: :naive_datetime)
   end
 
   def changeset(staff_role, attrs) do
