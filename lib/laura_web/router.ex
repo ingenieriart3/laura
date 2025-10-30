@@ -78,6 +78,8 @@ defmodule LauraWeb.Router do
     # get "/debug/styles", DebugController, :test_styles
     live "/debug/styles", DebugLive
 
+    # ✅ AGREGAR RUTA DE AUTH
+    live "/auth", AuthLive
   end
 
   # Otras rutas (para más adelante)

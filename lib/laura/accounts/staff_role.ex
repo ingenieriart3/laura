@@ -1,4 +1,3 @@
-# lib/laura/accounts/staff_role.ex
 defmodule Laura.Accounts.StaffRole do
   use Ecto.Schema
   import Ecto.Changeset
@@ -8,11 +7,9 @@ defmodule Laura.Accounts.StaffRole do
 
   schema "staff_roles" do
     field :name, :string
-    field :permissions, :map, default: %{}
+    field :permissions, :map
 
-    has_many :staffs, Laura.Accounts.Staff
-
-    timestamps()
+    timestamps(type: :naive_datetime)
   end
 
   def changeset(staff_role, attrs) do

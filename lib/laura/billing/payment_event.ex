@@ -1,4 +1,3 @@
-# lib/laura/billing/payment_event.ex
 defmodule Laura.Billing.PaymentEvent do
   use Ecto.Schema
   import Ecto.Changeset
@@ -8,23 +7,34 @@ defmodule Laura.Billing.PaymentEvent do
 
   schema "payment_events" do
     field :event_type, :string
+    field :amount, :decimal
+    field :currency, :string
+    field :status, :string
+
+    # MercadoPago fields
     field :mp_payment_id, :string
     field :mp_merchant_order_id, :string
-    field :status, :string
-    field :amount, :integer
-    field :metadata, :map, default: %{}
+    field :mp_preference_id, :string
+    field :mp_notification_url, :string
 
+    # Metadata
+    field :metadata, :map
+
+    # Relations
     belongs_to :health_brand, Laura.Platform.HealthBrand
 
-    timestamps()
+    timestamps(type: :naive_datetime)
   end
 
   def changeset(payment_event, attrs) do
     payment_event
     |> cast(attrs, [
-      :event_type, :mp_payment_id, :mp_merchant_order_id,
-      :status, :amount, :metadata, :health_brand_id
+      :health_brand_id, :event_type, :amount, :currency, :status,
+      :mp_payment_id, :mp_merchant_order_id, :mp_preference_id,
+      :mp_notification_url, :metadata
     ])
-    |> validate_required([:event_type, :health_brand_id])
+    |> validate_required([:health_brand_id, :event_type, :status])
+    |> validate_inclusion(:event_type, ["payment", "subscription", "refund"])
+    |> validate_inclusion(:status, ["pending", "approved", "rejected", "cancelled"])
   end
 end

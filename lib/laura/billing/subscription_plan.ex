@@ -1,4 +1,3 @@
-# lib/laura/billing/subscription_plan.ex
 defmodule Laura.Billing.SubscriptionPlan do
   use Ecto.Schema
   import Ecto.Changeset
@@ -9,25 +8,24 @@ defmodule Laura.Billing.SubscriptionPlan do
   schema "subscription_plans" do
     field :name, :string
     field :code, :string
-    field :price_monthly, :integer
-    field :staff_limit, :integer
-    field :reminder_limit, :integer
+    field :description, :string
+    field :monthly_price, :decimal
+    field :yearly_price, :decimal
+    field :reminders_included, :integer
+    field :extra_reminder_price, :decimal
     field :features, :map
     field :is_active, :boolean
-    field :recommended, :boolean
 
-    has_many :health_brands, Laura.Platform.HealthBrand
-
-    timestamps()
+    timestamps(type: :naive_datetime)
   end
 
   def changeset(subscription_plan, attrs) do
     subscription_plan
     |> cast(attrs, [
-      :name, :code, :price_monthly, :staff_limit, :reminder_limit,
-      :features, :is_active, :recommended
+      :name, :code, :description, :monthly_price, :yearly_price,
+      :reminders_included, :extra_reminder_price, :features, :is_active
     ])
-    |> validate_required([:name, :code, :price_monthly])
+    |> validate_required([:name, :code, :reminders_included])
     |> unique_constraint(:code)
   end
 end

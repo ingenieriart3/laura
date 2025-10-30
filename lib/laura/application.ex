@@ -54,13 +54,13 @@ defmodule Laura.Application do
       {Phoenix.PubSub, name: Laura.PubSub},
       LauraWeb.Endpoint,
       # ✅ SOLO módulos que existen actualmente
-      {Laura.Platform, []},
-      {Laura.Accounts, []},
-      {Laura.Billing, []},
-      {Laura.Security.RateLimiter, []},
-      {Laura.Scheduling, []},
-      {Laura.MedicalRecord, []},
-      {Laura.Messaging, []}
+      # {Laura.Platform, []},
+      # {Laura.Accounts, []},
+      # {Laura.Billing, []},
+      # {Laura.Security.RateLimiter, []},
+      # {Laura.Scheduling, []},
+      # {Laura.MedicalRecord, []},
+      # {Laura.Messaging, []}
     ]
 
     opts = [strategy: :one_for_one, name: Laura.Supervisor]

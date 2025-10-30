@@ -1,19 +1,20 @@
-# Script for populating the database. You can run it as:
-#
-#     mix run priv/repo/seeds.exs
-#
-# Inside the script, you can read and write to any of your
-# repositories directly:
-#
-#     Laura.Repo.insert!(%Laura.SomeSchema{})
-#
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
-
 # priv/repo/seeds.exs
-alias Laura.{Repo, Billing, Accounts}
+alias Laura.{Repo, Accounts, Platform, Billing}
 
-# Crear roles de staff
+# Clean existing data
+Repo.delete_all(Accounts.Staff)
+Repo.delete_all(Platform.HealthBrand)
+Repo.delete_all(Accounts.StaffRole)
+Repo.delete_all(Billing.SubscriptionPlan)
+Repo.delete_all(Billing.PaymentEvent)
+
+IO.puts "🌱 Seeding database..."
+
+# Create subscription plans
+Billing.seed_subscription_plans!()
+IO.puts "✅ Subscription plans created"
+
+# Create staff roles
 admin_role = Repo.insert!(%Accounts.StaffRole{
   name: "admin",
   permissions: %{all: true}
@@ -24,12 +25,57 @@ doctor_role = Repo.insert!(%Accounts.StaffRole{
   permissions: %{medical: true, scheduling: true}
 })
 
-receptionist_role = Repo.insert!(%Accounts.StaffRole{
-  name: "receptionist",
-  permissions: %{scheduling: true, patients: true}
+reception_role = Repo.insert!(%Accounts.StaffRole{
+  name: "reception",
+  permissions: %{scheduling: true, patient_management: true}
 })
 
-# Crear planes de suscripción
-Billing.seed_subscription_plans!()
+IO.puts "✅ Staff roles created"
 
-IO.puts "✅ Database seeded successfully!"
+# Create demo health brand with trial
+basic_plan = Billing.get_subscription_plan_by_code("basic")
+
+{:ok, demo_brand} = Platform.create_health_brand(%{
+  name: "Clínica Demo",
+  subdomain: "demo",
+  subscription_plan_id: basic_plan.id
+})
+
+IO.puts "✅ Demo health brand created (30-day trial active)"
+
+# Create admin staff for demo
+{:ok, admin_staff} = Accounts.create_staff(%{
+  email: "admin@demo.com",
+  health_brand_id: demo_brand.id,
+  staff_role_id: admin_role.id,
+  confirmed_at: NaiveDateTime.utc_now(),
+  is_active: true
+})
+
+# Create doctor staff
+{:ok, doctor_staff} = Accounts.create_staff(%{
+  email: "doctor@demo.com",
+  health_brand_id: demo_brand.id,
+  staff_role_id: doctor_role.id,
+  confirmed_at: NaiveDateTime.utc_now(),
+  is_active: true
+})
+
+IO.puts "✅ Staff accounts created"
+
+IO.puts """
+🎉 SEEDING COMPLETED!
+
+📧 Demo Accounts:
+   Admin: admin@demo.com
+   Doctor: doctor@demo.com
+
+🏥 Health Brand:
+   Name: #{demo_brand.name}
+   Subdomain: #{demo_brand.subdomain}
+   Trial ends: #{NaiveDateTime.to_string(demo_brand.trial_ends_at)}
+
+🔗 Magic Links will be printed in console when requested.
+
+🌐 Access: http://localhost:4000/auth
+"""
