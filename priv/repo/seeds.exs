@@ -10,33 +10,78 @@ alias Laura.Billing.{Invoice, PaymentEvent}
 alias Laura.Analytics.AnalyticsEvent
 alias Laura.Security.{ApiKey, Webhook}
 
+# # Clean existing data (en orden correcto para constraints)
+# IO.puts "🧹 Cleaning database..."
+
+# Repo.delete_all(InventoryTransaction)
+# Repo.delete_all(Inventory)
+# Repo.delete_all(TreatmentSession)
+# Repo.delete_all(Treatment)
+# Repo.delete_all(MedicalRecord)
+# Repo.delete_all(Appointment)
+# Repo.delete_all(StaffAvailability)
+# Repo.delete_all(Invoice)
+# Repo.delete_all(PaymentEvent)
+# Repo.delete_all(Message)
+# Repo.delete_all(Conversation)
+# Repo.delete_all(MessageTemplate)
+# Repo.delete_all(Patient)
+# Repo.delete_all(Staff)
+# Repo.delete_all(MedicalConfig)
+# Repo.delete_all(HealthBrand)
+# Repo.delete_all(StaffRole)
+# Repo.delete_all(Billing.SubscriptionPlan)
+
+# IO.puts "🌱 Seeding database..."
+
+# # 1. Subscription Plans
+# Billing.seed_subscription_plans!()
+# IO.puts "✅ Subscription plans created"
+
 # Clean existing data (en orden correcto para constraints)
 IO.puts "🧹 Cleaning database..."
 
-Repo.delete_all(InventoryTransaction)
-Repo.delete_all(Inventory)
-Repo.delete_all(TreatmentSession)
-Repo.delete_all(Treatment)
-Repo.delete_all(MedicalRecord)
-Repo.delete_all(Appointment)
-Repo.delete_all(StaffAvailability)
-Repo.delete_all(Invoice)
-Repo.delete_all(PaymentEvent)
-Repo.delete_all(Message)
-Repo.delete_all(Conversation)
-Repo.delete_all(MessageTemplate)
-Repo.delete_all(Patient)
-Repo.delete_all(Staff)
-Repo.delete_all(MedicalConfig)
-Repo.delete_all(HealthBrand)
-Repo.delete_all(StaffRole)
-Repo.delete_all(Billing.SubscriptionPlan)
+# Primero verificar si las tablas existen antes de borrar
+try do
+  Repo.delete_all(InventoryTransaction)
+  Repo.delete_all(Inventory)
+  Repo.delete_all(TreatmentSession)
+  Repo.delete_all(Treatment)
+  Repo.delete_all(MedicalRecord)
+  Repo.delete_all(Appointment)
+  Repo.delete_all(StaffAvailability)
+  Repo.delete_all(Invoice)
+  Repo.delete_all(PaymentEvent)
+  Repo.delete_all(Message)
+  Repo.delete_all(Conversation)
+  Repo.delete_all(MessageTemplate)
+  Repo.delete_all(Patient)
+  Repo.delete_all(Staff)
+  Repo.delete_all(MedicalConfig)
+  Repo.delete_all(HealthBrand)
+  Repo.delete_all(StaffRole)
+
+  # Solo borrar subscription_plans si la tabla existe
+  if Repo.query!("SELECT to_regclass('subscription_plans')") |> Map.get(:rows) |> List.first() |> List.first() do
+    Repo.delete_all(Billing.SubscriptionPlan)
+  end
+rescue
+  _e ->
+    IO.puts "⚠️  Some tables don't exist yet, continuing with seed..."
+end
 
 IO.puts "🌱 Seeding database..."
 
-# 1. Subscription Plans
+# 1. Subscription Plans - crear si no existen
+if Repo.aggregate(Billing.SubscriptionPlan, :count, :id) == 0 do
+
+
 Billing.seed_subscription_plans!()
-IO.puts "✅ Subscription plans created"
+  IO.puts "✅ Subscription plans created"
+else
+  IO.puts "✅ Subscription plans already exist"
+end
+
 
 # 2. Staff Roles
 admin_role = Repo.insert!(%StaffRole{

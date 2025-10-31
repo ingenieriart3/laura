@@ -108,67 +108,56 @@ defmodule Laura.Billing do
   def get_subscription_plan_by_code(code), do: Repo.get_by(SubscriptionPlan, code: code)
 
   def seed_subscription_plans! do
-    plans = [
-      %{
-        name: "Básico",
-        code: "basic",
-        description: "Perfecto para comenzar",
-        monthly_price: Decimal.new("2990.00"),
-        yearly_price: Decimal.new("29900.00"),
-        reminders_included: 100,
-        extra_reminder_price: Decimal.new("5.00"),
-        features: %{
-          "basic_analytics" => true,
-          "email_support" => true,
-          "whatsapp_reminders" => true
+      plans = [
+        %{
+          name: "Básico",
+          code: "basic",
+          price: Decimal.new("2990"),
+          billing_cycle: "monthly",
+          reminders_included: 100,
+          patients_limit: 500,
+          staff_limit: 3,
+          features: %{
+            medical_records: true,
+            appointments: true,
+            basic_analytics: true,
+            whatsapp_reminders: true
+          }
         },
-        is_active: true
-      },
-      %{
-        name: "Profesional",
-        code: "professional",
-        description: "Para clínicas en crecimiento",
-        monthly_price: Decimal.new("5990.00"),
-        yearly_price: Decimal.new("59900.00"),
-        reminders_included: 500,
-        extra_reminder_price: Decimal.new("4.00"),
-        features: %{
-          "advanced_analytics" => true,
-          "custom_branding" => true,
-          "priority_support" => true,
-          "whatsapp_reminders" => true
-        },
-        is_active: true
-      },
-      %{
-        name: "Enterprise",
-        code: "enterprise",
-        description: "Para grandes instituciones",
-        monthly_price: Decimal.new("11990.00"),
-        yearly_price: Decimal.new("119900.00"),
-        reminders_included: 2000,
-        extra_reminder_price: Decimal.new("3.00"),
-        features: %{
-          "api_access" => true,
-          "custom_branding" => true,
-          "dedicated_support" => true,
-          "premium_analytics" => true,
-          "whatsapp_reminders" => true
-        },
-        is_active: true
-      }
-    ]
+        %{
+          name: "Profesional",
+          code: "professional",
+          price: Decimal.new("5990"),
+          billing_cycle: "monthly",
+          reminders_included: 500,
+          patients_limit: 2000,
+          staff_limit: 10,
+          features: %{
+            medical_records: true,
+            appointments: true,
+            advanced_analytics: true,
+            whatsapp_reminders: true,
+            inventory: true,
+            api_access: true
+          }
+        }
+      ]
 
-    Enum.each(plans, fn plan_attrs ->
-      case get_subscription_plan_by_code(plan_attrs[:code]) do
-        nil ->
+      Enum.each(plans, fn plan_attrs ->
+        # Verificar directamente con query en vez de función
+        existing = Repo.one(from p in SubscriptionPlan, where: p.code == ^plan_attrs.code)
+
+        if is_nil(existing) do
           %SubscriptionPlan{}
           |> SubscriptionPlan.changeset(plan_attrs)
           |> Repo.insert!()
-        _existing ->
-          :already_exists
-      end
-    end)
+        end
+      end)
+  end
+
+  # Mover esta función después del seed para evitar dependencia cíclica
+  def get_subscription_plan_by_code(code) do
+    Repo.one(from p in SubscriptionPlan, where: p.code == ^code)
   end
 
   # PaymentEvents (existente)

@@ -1,4 +1,3 @@
-# priv/repo/migrations/20251030013001_create_subscription_plans.exs
 defmodule Laura.Repo.Migrations.CreateSubscriptionPlans do
   use Ecto.Migration
 
@@ -8,16 +7,24 @@ defmodule Laura.Repo.Migrations.CreateSubscriptionPlans do
       add :name, :string, null: false
       add :code, :string, null: false
       add :description, :text
-      add :monthly_price, :decimal, precision: 10, scale: 2
-      add :yearly_price, :decimal, precision: 10, scale: 2
-      add :reminders_included, :integer, null: false
-      add :extra_reminder_price, :decimal, precision: 10, scale: 2
+      add :price, :decimal, precision: 10, scale: 2, null: false
+      add :billing_cycle, :string, null: false, default: "monthly"
+      add :reminders_included, :integer, null: false, default: 0
+      add :patients_limit, :integer
+      add :staff_limit, :integer
+      add :storage_limit_mb, :integer
       add :features, :map, default: %{}
-      add :is_active, :boolean, default: true
+      add :is_active, :boolean, default: true, null: false
+      add :is_public, :boolean, default: true, null: false
+      add :sort_order, :integer, default: 0
+      add :stripe_price_id, :string
+      add :stripe_product_id, :string
 
       timestamps(type: :naive_datetime)
     end
 
     create unique_index(:subscription_plans, [:code])
+    create index(:subscription_plans, [:is_active, :is_public])
+    create index(:subscription_plans, [:sort_order])
   end
 end
