@@ -13,10 +13,6 @@ defmodule Laura.Platform do
     |> Repo.insert()
   end
 
-  # def change_health_brand(%HealthBrand{} = health_brand, attrs \\ %{}) do
-  #   HealthBrand.registration_changeset(health_brand, attrs)
-  # end
-
   def change_health_brand(%HealthBrand{} = health_brand, attrs \\ %{}) do
     HealthBrand.changeset(health_brand, attrs)
   end
@@ -35,5 +31,17 @@ defmodule Laura.Platform do
       current_period_end: NaiveDateTime.add(NaiveDateTime.utc_now(), 30 * 24 * 60 * 60)
     })
     |> Repo.update()
+  end
+
+  # Nueva función para verificar si un email ya existe globalmente
+  def email_exists?(email) do
+    query = from s in "staffs",
+            where: s.email == ^email,
+            select: fragment("1")
+
+    case Repo.one(query) do
+      nil -> false
+      _ -> true
+    end
   end
 end

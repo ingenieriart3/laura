@@ -12,7 +12,7 @@
 
     <!-- Formulario -->
     <div class="bg-white shadow-xl rounded-2xl p-8">
-      <.form :let={f} for={@changeset} action={~p"/register"} class="space-y-6">
+      <.form :let={f} for={@changeset} action={~p"/register"} class="space-y-6" id="registration-form">
         <!-- Información de la Clínica -->
         <div class="space-y-4">
           <h2 class="text-2xl font-semibold text-gray-900">Información de tu Clínica</h2>
@@ -47,7 +47,7 @@
               <.input 
                 field={f[:subdomain]}
                 type="text" 
-                class="input input-bordered join-item w-full" 
+                class="input input-bordered join-item w-full #{if @subdomain_error, do: 'input-error'}" 
                 placeholder="tu-clinica"
                 required
                 phx-debounce="300"
@@ -58,14 +58,22 @@
             </div>
             <label class="label">
               <span class="label-text-alt text-gray-500">
-                Será tu URL única: <strong>tu-subdominio</strong>.laura.ia3.art
+                Será tu URL única: <strong><%= f[:subdomain].value || "tu-subdominio" %></strong>.laura.ia3.art
               </span>
             </label>
+            
+            <!-- Mensaje de error para subdominio -->
             <%= if f[:subdomain].errors do %>
               <div class="text-error text-sm mt-1">
                 <%= for error <- f[:subdomain].errors do %>
                   <p><%= translate_error(error) %></p>
                 <% end %>
+              </div>
+            <% end %>
+            
+            <%= if @subdomain_error do %>
+              <div class="text-error text-sm mt-1">
+                <p>❌ Este subdominio ya está en uso. Por favor elige otro.</p>
               </div>
             <% end %>
           </div>
@@ -83,7 +91,7 @@
             <.input 
               field={f[:email]}
               type="email" 
-              class="input input-bordered w-full" 
+              class="input input-bordered w-full #{if @email_error, do: 'input-error'}" 
               placeholder="tu@email.com"
               required
             />
@@ -92,11 +100,19 @@
                 Te enviaremos un enlace mágico para acceder
               </span>
             </label>
+            
+            <!-- Mensaje de error para email -->
             <%= if f[:email].errors do %>
               <div class="text-error text-sm mt-1">
                 <%= for error <- f[:email].errors do %>
                   <p><%= translate_error(error) %></p>
                 <% end %>
+              </div>
+            <% end %>
+            
+            <%= if @email_error do %>
+              <div class="text-error text-sm mt-1">
+                <p>❌ Este email ya está registrado en otra clínica.</p>
               </div>
             <% end %>
           </div>
