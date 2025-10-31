@@ -20,13 +20,13 @@
               <h3 class="text-2xl font-bold text-gray-900"><%= plan.name %></h3>
               <p class="text-gray-600 mt-2"><%= plan.description %></p>
               
-              <!-- Price -->
+              <!-- Price - CORREGIDO -->
               <div class="mt-4">
-                <span class="text-4xl font-bold text-gray-900">$<%= Decimal.to_integer(plan.monthly_price) %></span>
+                <span class="text-4xl font-bold text-gray-900">$<%= Decimal.to_integer(plan.price) %></span>
                 <span class="text-gray-600">/mes</span>
               </div>
               <div class="text-sm text-gray-500">
-                o $<%= Decimal.to_integer(plan.yearly_price) %>/año
+                Facturación <%= String.capitalize(plan.billing_cycle) %>
               </div>
             </div>
 
@@ -38,6 +38,24 @@
                 </svg>
                 <span><%= plan.reminders_included %> recordatorios mensuales</span>
               </div>
+              
+              <%= if plan.patients_limit do %>
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Hasta <%= plan.patients_limit %> pacientes</span>
+                </div>
+              <% end %>
+
+              <%= if plan.staff_limit do %>
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <span>Hasta <%= plan.staff_limit %> usuarios staff</span>
+                </div>
+              <% end %>
               
               <%= for {feature, enabled} <- plan.features do %>
                 <%= if enabled do %>
@@ -51,10 +69,10 @@
               <% end %>
             </div>
 
-            <!-- Extra Reminder Price -->
+            <!-- Limits Info - REEMPLAZADO Extra Reminder Price -->
             <div class="bg-base-200 rounded-lg p-3 mb-6">
               <p class="text-sm text-center text-gray-600">
-                Recordatorios extra: $<%= Decimal.to_integer(plan.extra_reminder_price) %> c/u
+                <%= if plan.code == "basic", do: "Ideal para consultorios pequeños", else: "Perfecto para clínicas en crecimiento" %>
               </p>
             </div>
 

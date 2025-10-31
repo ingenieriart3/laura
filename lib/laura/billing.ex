@@ -140,6 +140,24 @@ defmodule Laura.Billing do
             inventory: true,
             api_access: true
           }
+        },
+        %{
+          name: "Enterprise",
+          code: "enterprise",
+          price: Decimal.new("11990"),
+          billing_cycle: "monthly",
+          reminders_included: 2000,
+          patients_limit: 10000,
+          staff_limit: 50,
+          features: %{
+            medical_records: true,
+            appointments: true,
+            premium_analytics: true,
+            whatsapp_reminders: true,
+            inventory: true,
+            api_access: true,
+            dedicated_support: true
+          }
         }
       ]
 
