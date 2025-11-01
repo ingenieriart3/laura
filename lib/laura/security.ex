@@ -1,8 +1,13 @@
 defmodule Laura.Security do
   import Ecto.Query, warn: false
   alias Laura.Repo
-  alias Laura.Security.{ApiKey, Webhook}
-
+  # alias Laura.Security.{ApiKey, Webhook, StaffInvitation}
+  alias Laura.Security.{
+    ApiKey,
+    Webhook,
+    Permission,
+    StaffInvitation
+  }
   # API Keys
   def list_api_keys(health_brand_id) do
     query = from ak in ApiKey,

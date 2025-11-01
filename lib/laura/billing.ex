@@ -94,8 +94,14 @@
 defmodule Laura.Billing do
   import Ecto.Query, warn: false
   alias Laura.Repo
-  alias Laura.Billing.{SubscriptionPlan, PaymentEvent, Invoice}
-
+  # alias Laura.Billing.{SubscriptionPlan, PaymentEvent, Invoice}
+  alias Laura.Billing.{Invoice,
+  PaymentEvent,
+  BillingItem,
+  PaymentIntegration,
+  InsuranceProvider,
+  PatientInsurance,
+  SubscriptionPlan}
   # SubscriptionPlans (existente)
   def list_subscription_plans, do: Repo.all(SubscriptionPlan)
   def list_public_subscription_plans do
