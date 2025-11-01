@@ -1,22 +1,8 @@
-# # lib/laura/medical_record.ex
-# defmodule Laura.MedicalRecord do
-#   def child_spec(_opts) do
-#     %{
-#       id: __MODULE__,
-#       start: {__MODULE__, :start_link, []},
-#       type: :worker,
-#       restart: :permanent,
-#       shutdown: 500
-#     }
-#   end
-
-#   def start_link, do: :ignore
-# end
 
 defmodule Laura.MedicalRecord do
   import Ecto.Query, warn: false
   alias Laura.Repo
-  alias Laura.MedicalRecord.{MedicalRecord, Treatment, TreatmentSession}
+  alias Laura.MedicalRecord.{MedicalRecord, Treatment, TreatmentSession, TreatmentProtocol, ConsultationTemplate, MedicalRecordAttachment, MedicationCatalog, DiagnosticCatalog, Prescription}
 
   # Medical Records
   def list_medical_records(health_brand_id, patient_id \\ nil) do

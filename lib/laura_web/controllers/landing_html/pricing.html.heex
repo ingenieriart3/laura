@@ -13,102 +13,194 @@
     <!-- Plans Grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
       <%= for plan <- @plans do %>
-        <div class={"card bg-base-100 shadow-xl border-2 #{if plan.code == "professional", do: "border-primary ring-2 ring-primary/20", else: "border-base-200"}"}>
-          <div class="card-body">
+        <!-- Plan Card -->
+        <div class={"card bg-base-100 shadow-xl border-2 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 #{if plan.code == "professional", do: "border-primary ring-2 ring-primary/20 relative", else: "border-base-200"}"}>
+          <!-- Popular Badge -->
+          <%= if plan.code == "professional" do %>
+            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <span class="bg-primary text-primary-content px-4 py-1 rounded-full text-sm font-semibold shadow-lg">
+                ⭐ Más Popular
+              </span>
+            </div>
+          <% end %>
+
+          <div class="card-body pt-8">
             <!-- Plan Header -->
             <div class="text-center mb-6">
               <h3 class="text-2xl font-bold text-gray-900"><%= plan.name %></h3>
-              <p class="text-gray-600 mt-2"><%= plan.description %></p>
+              <p class="text-gray-600 mt-2 text-sm">
+                <%= if plan.code == "basic", do: "Ideal para consultorios pequeños", else: "Perfecto para clínicas en crecimiento" %>
+              </p>
               
               <!-- Price -->
-              <div class="mt-4">
-                <span class="text-4xl font-bold text-gray-900">$<%= Decimal.to_integer(plan.monthly_price) %></span>
-                <span class="text-gray-600">/mes</span>
+              <div class="mt-6 mb-4">
+                <span class="text-4xl font-bold text-gray-900">$<%= Decimal.to_integer(plan.price) %></span>
+                <span class="text-gray-600 text-lg">/mes</span>
               </div>
-              <div class="text-sm text-gray-500">
-                o $<%= Decimal.to_integer(plan.yearly_price) %>/año
+              <div class="text-sm text-gray-500 bg-base-200 rounded-lg py-1">
+                Facturación <%= String.capitalize(plan.billing_cycle) %>
               </div>
             </div>
+
+            <!-- Divider -->
+            <div class="divider my-4"></div>
 
             <!-- Features -->
-            <div class="space-y-3 mb-6">
-              <div class="flex items-center">
-                <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                <span><%= plan.reminders_included %> recordatorios mensuales</span>
-              </div>
-              
-              <%= for {feature, enabled} <- plan.features do %>
-                <%= if enabled do %>
-                  <div class="flex items-center">
-                    <svg class="w-5 h-5 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                    <span><%= feature_to_text(feature) %></span>
+            <div class="space-y-4 mb-6 flex-grow">
+              <!-- Core Limits -->
+              <div class="space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-sm font-medium text-gray-700">Recordatorios incluidos:</span>
+                  <span class="badge badge-primary badge-lg font-bold"><%= plan.reminders_included %>/mes</span>
+                </div>
+                
+                <%= if plan.patients_limit do %>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-gray-700">Límite de pacientes:</span>
+                    <span class="badge badge-outline badge-lg"><%= plan.patients_limit %></span>
                   </div>
                 <% end %>
-              <% end %>
-            </div>
 
-            <!-- Extra Reminder Price -->
-            <div class="bg-base-200 rounded-lg p-3 mb-6">
-              <p class="text-sm text-center text-gray-600">
-                Recordatorios extra: $<%= Decimal.to_integer(plan.extra_reminder_price) %> c/u
-              </p>
+                <%= if plan.staff_limit do %>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-gray-700">Usuarios staff:</span>
+                    <span class="badge badge-outline badge-lg"><%= plan.staff_limit %></span>
+                  </div>
+                <% end %>
+              </div>
+
+              <!-- Divider -->
+              <div class="divider my-4 text-xs">CARACTERÍSTICAS INCLUIDAS</div>
+
+              <!-- Features List -->
+              <div class="space-y-3">
+                <%= for {feature, enabled} <- plan.features do %>
+                  <%= if enabled do %>
+                    <div class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      <span class="text-sm text-gray-700 leading-tight"><%= translate_feature(feature) %></span>
+                    </div>
+                  <% else %>
+                    <div class="flex items-start opacity-50">
+                      <svg class="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                      </svg>
+                      <span class="text-sm text-gray-500 leading-tight"><%= translate_feature(feature) %></span>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
             </div>
 
             <!-- CTA Button -->
-            <div class="card-actions justify-center">
+            <div class="card-actions justify-center mt-6">
               <a 
                 href={"/register?plan=#{plan.code}"}
-                class={"btn w-full #{if plan.code == "professional", do: "btn-primary", else: "btn-outline"}"}
+                class={"btn w-full font-semibold text-lg py-4 #{if plan.code == "professional", do: "btn-primary", else: "btn-outline btn-primary"}"}
               >
-                <%= if plan.code == "basic", do: "Comenzar Trial", else: "Elegir Plan" %>
+                <%= if plan.code == "basic", do: "🎯 Comenzar Trial", else: "🚀 Elegir Plan" %>
               </a>
+              <p class="text-xs text-gray-500 text-center mt-2">
+                ✅ 30 días gratis - Sin tarjeta requerida
+              </p>
             </div>
           </div>
         </div>
       <% end %>
     </div>
 
+    <!-- Comparison Table -->
+    <div class="max-w-4xl mx-auto mt-20">
+      <h2 class="text-3xl font-bold text-center mb-12">Comparación Detallada</h2>
+      
+      <div class="overflow-x-auto bg-base-100 rounded-lg shadow-lg">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr class="bg-base-200">
+              <th class="text-left">Característica</th>
+              <%= for plan <- @plans do %>
+                <th class={"text-center #{if plan.code == "professional", do: "bg-primary/10"}"}>
+                  <%= plan.name %>
+                </th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="font-semibold">Precio mensual</td>
+              <%= for plan <- @plans do %>
+                <td class="text-center font-bold text-lg">
+                  $<%= Decimal.to_integer(plan.price) %>
+                </td>
+              <% end %>
+            </tr>
+            <tr>
+              <td class="font-semibold">Recordatorios incluidos</td>
+              <%= for plan <- @plans do %>
+                <td class="text-center">
+                  <span class="badge badge-primary"><%= plan.reminders_included %>/mes</span>
+                </td>
+              <% end %>
+            </tr>
+            <tr>
+              <td class="font-semibold">Límite de pacientes</td>
+              <%= for plan <- @plans do %>
+                <td class="text-center">
+                  <%= plan.patients_limit || "Ilimitado" %>
+                </td>
+              <% end %>
+            </tr>
+            <tr>
+              <td class="font-semibold">Usuarios staff</td>
+              <%= for plan <- @plans do %>
+                <td class="text-center">
+                  <%= plan.staff_limit || "Ilimitado" %>
+                </td>
+              <% end %>
+            </tr>
+            <%= for feature <- ["medical_records", "appointments", "whatsapp_reminders", "basic_analytics", "advanced_analytics", "inventory", "api_access"] do %>
+              <tr>
+                <td class="font-semibold"><%= translate_feature(feature) %></td>
+                <%= for plan <- @plans do %>
+                  <td class="text-center">
+                    <%= if Map.get(plan.features || %{}, feature) do %>
+                      <span class="text-green-500 text-xl">✓</span>
+                    <% else %>
+                      <span class="text-gray-400 text-xl">✗</span>
+                    <% end %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <!-- FAQ Section -->
     <div class="max-w-3xl mx-auto mt-20">
       <h2 class="text-3xl font-bold text-center mb-12">Preguntas Frecuentes</h2>
       
-      <div class="space-y-6">
-        <!-- FAQ 1 -->
-        <div class="collapse collapse-plus bg-base-200">
-          <input type="radio" name="faq-accordion" />
-          <div class="collapse-title text-xl font-medium">
-            ¿Puedo cambiar de plan después?
+      <div class="space-y-4">
+        <%= for {question, answer} <- [
+          {"¿Puedo cambiar de plan después?", "Sí, puedes cambiar entre planes en cualquier momento. La diferencia se prorrateará automáticamente."},
+          {"¿Qué pasa después de los 30 días gratis?", "Tu plan elegido se activará automáticamente. Puedes cancelar en cualquier momento antes de que termine el período de prueba."},
+          {"¿Necesito tarjeta de crédito para la prueba?", "No, la prueba de 30 días es completamente gratuita y no requiere tarjeta de crédito."},
+          {"¿Ofrecen descuentos para múltiples clínicas?", "Sí, ofrecemos descuentos especiales para grupos y cadenas de clínicas. Contáctanos para más información."},
+          {"¿Qué métodos de pago aceptan?", "Aceptamos todas las tarjetas de crédito/débito principales y transferencias bancarias."}
+        ] do %>
+          <div class="collapse collapse-plus bg-base-200 hover:bg-base-300 transition-colors">
+            <input type="radio" name="faq-accordion" />
+            <div class="collapse-title text-lg font-medium">
+              <%= question %>
+            </div>
+            <div class="collapse-content">
+              <p class="text-gray-700"><%= answer %></p>
+            </div>
           </div>
-          <div class="collapse-content">
-            <p>Sí, puedes cambiar entre planes en cualquier momento. La diferencia se prorrateará automáticamente.</p>
-          </div>
-        </div>
-
-        <!-- FAQ 2 -->
-        <div class="collapse collapse-plus bg-base-200">
-          <input type="radio" name="faq-accordion" />
-          <div class="collapse-title text-xl font-medium">
-            ¿Qué pasa después de los 30 días gratis?
-          </div>
-          <div class="collapse-content">
-            <p>Tu plan elegido se activará automáticamente. Puedes cancelar en cualquier momento antes de que termine el período de prueba.</p>
-          </div>
-        </div>
-
-        <!-- FAQ 3 -->
-        <div class="collapse collapse-plus bg-base-200">
-          <input type="radio" name="faq-accordion" />
-          <div class="collapse-title text-xl font-medium">
-            ¿Necesito tarjeta de crédito para la prueba?
-          </div>
-          <div class="collapse-content">
-            <p>No, la prueba de 30 días es completamente gratuita y no requiere tarjeta de crédito.</p>
-          </div>
-        </div>
+        <% end %>
       </div>
     </div>
   </div>

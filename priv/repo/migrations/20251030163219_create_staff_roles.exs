@@ -12,5 +12,7 @@ defmodule Laura.Repo.Migrations.CreateStaffRoles do
     end
 
     create unique_index(:staff_roles, [:name])
+    # create index(:staff_roles, [:role_type])
+    # create index(:staff_roles, [:is_system_role])
   end
 end

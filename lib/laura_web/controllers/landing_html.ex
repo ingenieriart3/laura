@@ -24,4 +24,18 @@ defmodule LauraWeb.LandingHTML do
       _ -> to_string(feature)
     end
   end
+
+  # Helper function para el template pricing
+  def translate_feature(feature) do
+    case feature do
+      "medical_records" -> "Historias clínicas"
+      "appointments" -> "Gestión de citas"
+      "basic_analytics" -> "Analíticas básicas"
+      "advanced_analytics" -> "Analíticas avanzadas"
+      "whatsapp_reminders" -> "Recordatorios WhatsApp"
+      "inventory" -> "Control de inventario"
+      "api_access" -> "Acceso API"
+      _ -> String.replace(feature, "_", " ") |> String.capitalize()
+    end
+  end
 end

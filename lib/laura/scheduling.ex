@@ -16,7 +16,7 @@
 defmodule Laura.Scheduling do
   import Ecto.Query, warn: false
   alias Laura.Repo
-  alias Laura.Scheduling.{Appointment, StaffAvailability}
+  alias Laura.Scheduling.{Appointment, StaffAvailability, CheckInLog, AppointmentStatusLog}
 
   # Appointments
   def list_appointments(health_brand_id, filters \\ %{}) do
